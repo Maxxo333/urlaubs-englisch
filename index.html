@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Urlaubs-Englisch</title>
+<meta name="description" content="Englisch-Phrasen und Wörter für den Urlaub, mit Vorlesen, Karten und Quiz. Kostenlos und offline.">
+<meta name="theme-color" content="#1C4FD6">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<style>
+  /* Layout: one narrow column, sticky header with three tabs, phrases as large English lines you can read aloud or hold up to someone. */
+  :root {
+    --bg: #F1F5F6;
+    --surface: #FFFFFF;
+    --ink: #0E2228;
+    --muted: #55696F;
+    --line: #D6E0E3;
+    --accent: #1C4FD6;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #E2EAFC;
+    --good: #0F7A57;
+    --good-soft: #DCF2E8;
+    --bad: #B3261E;
+    --bad-soft: #FBE3E0;
+    --font-display: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B1417;
+      --surface: #131E22;
+      --ink: #E6EFF1;
+      --muted: #94A9AE;
+      --line: #25353A;
+      --accent: #7EA4FF;
+      --accent-ink: #0A1226;
+      --accent-soft: #1A2A4B;
+      --good: #4FD3A1;
+      --good-soft: #10332A;
+      --bad: #FF8E84;
+      --bad-soft: #3B1815;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B1417;
+    --surface: #131E22;
+    --ink: #E6EFF1;
+    --muted: #94A9AE;
+    --line: #25353A;
+    --accent: #7EA4FF;
+    --accent-ink: #0A1226;
+    --accent-soft: #1A2A4B;
+    --good: #4FD3A1;
+    --good-soft: #10332A;
+    --bad: #FF8E84;
+    --bad-soft: #3B1815;
+    color-scheme: dark;
+  }
+
+  [hidden] { display: none !important; }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.5 var(--font-body);
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 0 56px;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+    z-index: 10; background: var(--bg);
+  }
+  button, select, input { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  p, h1, h2 { margin: 0; }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  header.top {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+    background: var(--bg); padding: 14px 0 10px;
+  }
+  .brand { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+  .brand h1 { font: 700 1.35rem/1.2 var(--font-display); letter-spacing: -0.01em; }
+  #stat { color: var(--muted); font-size: .85rem; font-variant-numeric: tabular-nums; }
+
+  .vbar { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: end; margin-bottom: 12px; }
+  .vbar:empty { display: none; }
+  .vbar .hint { grid-column: 1 / -1; margin: 0; }
+  .vbar .btn { min-height: 48px; }
+  .vbar .sel, .vbar select { min-width: 0; width: 100%; }
+  .nospeech .vbar { display: none; }
+  .words { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; }
+  .wd { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 6px 6px 6px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+  .wd b { font: 600 1.08rem/1.3 var(--font-display); overflow-wrap: anywhere; }
+  .wd .de { font-size: .9rem; }
+  .wd .pr { font-size: .8rem; }
+  .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+  .tabs button { min-height: 44px; border: 0; border-radius: 10px; background: transparent; font-weight: 600; color: var(--muted); }
+  .tabs button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+
+  main { padding-top: 12px; }
+
+  /* Search + chips */
+  .search input {
+    width: 100%; min-height: 48px; padding: 0 16px; border: 1px solid var(--line);
+    border-radius: 12px; background: var(--surface);
+  }
+  .search input::placeholder { color: var(--muted); }
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding: 12px 0 6px; scrollbar-width: thin; }
+  .chip {
+    flex: none; min-height: 40px; padding: 0 14px; border: 1px solid var(--line);
+    border-radius: 999px; background: var(--surface); font-weight: 500; white-space: nowrap;
+  }
+  .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  .chip.sos { border-color: var(--bad); color: var(--bad); }
+  .chip.sos[aria-pressed="true"] { background: var(--bad); border-color: var(--bad); color: var(--bg); }
+
+  .group-title {
+    font: 600 .78rem/1.2 var(--font-display); text-transform: uppercase; letter-spacing: .09em;
+    color: var(--muted); margin: 22px 0 8px;
+  }
+  .hint { color: var(--muted); font-size: .9rem; margin: 14px 0 4px; }
+
+  /* Phrase rows */
+  .list { display: flex; flex-direction: column; gap: 8px; }
+  .item {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; align-items: start;
+    padding: 14px 12px 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  }
+  .txt { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .en { font: 600 1.18rem/1.3 var(--font-display); overflow-wrap: anywhere; }
+  .de { color: var(--muted); font-size: .95rem; overflow-wrap: anywhere; }
+  .pr { color: var(--accent); font-size: .86rem; font-weight: 500; }
+  .note { font-size: .82rem; color: var(--ink); background: var(--accent-soft); border-radius: 8px; padding: 4px 8px; align-self: flex-start; margin-top: 3px; }
+  .acts { display: flex; gap: 2px; }
+  .ib {
+    width: 44px; height: 44px; display: grid; place-items: center; border: 0; background: transparent;
+    border-radius: 12px; color: var(--muted);
+  }
+  .ib:hover { background: var(--accent-soft); color: var(--accent); }
+  .ib svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .ib.on { color: var(--accent); }
+  .ib.on svg { fill: currentColor; }
+  .nospeech [data-act="speak"] { display: none; }
+
+  /* Learn + quiz */
+  .tool { display: grid; gap: 10px; margin-bottom: 14px; }
+  .sel { display: grid; gap: 4px; font-size: .8rem; color: var(--muted); }
+  .sel select {
+    min-height: 48px; padding: 0 12px; border: 1px solid var(--line); border-radius: 12px;
+    background: var(--surface); color: var(--ink); font-size: 1rem;
+  }
+  .dir { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+  .dir button { min-height: 40px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); font-weight: 500; font-size: .9rem; }
+  .dir button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+
+  .meter { display: grid; gap: 6px; margin-bottom: 14px; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .bar { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .25s; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 24px 20px; display: grid; gap: 18px; }
+  .card.center { text-align: center; justify-items: center; }
+  .label { font: 600 .78rem/1.2 var(--font-display); text-transform: uppercase; letter-spacing: .09em; color: var(--muted); }
+  .prompt { font: 700 clamp(1.45rem, 5.5vw, 2rem)/1.25 var(--font-display); overflow-wrap: anywhere; }
+  .answer { display: grid; gap: 6px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .answer .big { font: 700 clamp(1.3rem, 5vw, 1.8rem)/1.25 var(--font-display); color: var(--accent); overflow-wrap: anywhere; }
+  .row { display: flex; align-items: center; gap: 8px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .btn {
+    min-height: 52px; padding: 0 20px; border-radius: 14px; border: 1px solid var(--line);
+    background: var(--surface); font-weight: 600;
+  }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn.good { background: var(--good-soft); border-color: var(--good); color: var(--good); }
+  .btn.bad { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+  .btn.link { border: 0; background: transparent; color: var(--muted); min-height: 44px; font-weight: 500; text-decoration: underline; }
+
+  .opts { display: grid; gap: 8px; }
+  .opt {
+    min-height: 56px; padding: 12px 16px; text-align: left; background: var(--surface);
+    border: 1.5px solid var(--line); border-radius: 14px; font-weight: 500; overflow-wrap: anywhere;
+  }
+  .opt.right { background: var(--good-soft); border-color: var(--good); color: var(--good); }
+  .opt.wrong { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+  .fb { font-weight: 600; }
+  .fb.ok { color: var(--good); }
+  .fb.no { color: var(--bad); }
+  .score { font: 700 3rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+  .miss { display: grid; gap: 8px; width: 100%; text-align: left; }
+  .miss div { padding: 10px 12px; background: var(--bg); border-radius: 10px; }
+  .miss b { font-family: var(--font-display); }
+
+  /* Show-to-someone overlay */
+  #show {
+    position: fixed; inset: 0; z-index: 20; background: var(--surface); color: var(--ink);
+    display: grid; place-content: center; gap: 22px; text-align: center;
+    padding: max(24px, env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
+  }
+  #show .big { font: 700 clamp(2.2rem, 10vw, 4.6rem)/1.15 var(--font-display); overflow-wrap: anywhere; }
+  #show .small { color: var(--muted); font-size: 1rem; }
+  #show .close { position: absolute; top: max(14px, env(safe-area-inset-top, 0px)); right: max(14px, env(safe-area-inset-right, 0px)); }
+
+  @media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Urlaubs-Englisch</h1>
+      <span id="stat"></span>
+    </div>
+    <nav class="tabs" aria-label="Bereiche">
+      <button data-act="tab" data-tab="phrases" aria-pressed="true">Phrasen</button>
+      <button data-act="tab" data-tab="learn" aria-pressed="false">Lernen</button>
+      <button data-act="tab" data-tab="quiz" aria-pressed="false">Quiz</button>
+      <button data-act="tab" data-tab="fibel" aria-pressed="false">Fibel</button>
+    </nav>
+  </header>
+  <main id="view"></main>
+</div>
+
+<div id="show" hidden role="dialog" aria-modal="true" aria-label="Phrase zum Vorzeigen" data-act="close">
+  <button class="btn close" data-act="close">Schließen</button>
+  <p class="big" id="showEn" lang="en"></p>
+  <p class="small" id="showDe" lang="de"></p>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Inhalte: [Deutsch, Englisch, Aussprache-Hilfe, Hinweis] ---------- */
+  var DATA = [
+    { id: "sos", name: "Notfall", items: [
+      ["Hilfe!", "Help!"],
+      ["Können Sie mir bitte helfen?", "Can you help me, please?"],
+      ["Ich brauche einen Arzt.", "I need a doctor."],
+      ["Rufen Sie bitte einen Krankenwagen.", "Please call an ambulance.", "ÄM-bju-lenß", "In den USA und Kanada: 911, in Großbritannien 999, in der EU 112."],
+      ["Mir ist schlecht.", "I feel sick."],
+      ["Ich habe hier Schmerzen.", "I have a pain here."],
+      ["Ich bin allergisch gegen Penicillin.", "I'm allergic to penicillin.", "e-LÖR-dschik"],
+      ["Wo ist die nächste Apotheke?", "Where is the nearest pharmacy?", "FAA-me-ßi", "In den USA oft auch „drugstore“."],
+      ["Brauche ich dafür ein Rezept?", "Do I need a prescription for this?", "pre-SKRIP-schn"],
+      ["Meine Tasche wurde gestohlen.", "My bag has been stolen.", "STOU-len"],
+      ["Ich habe meinen Reisepass verloren.", "I've lost my passport.", "PAAß-port"],
+      ["Wo ist die Polizeiwache?", "Where is the police station?", "pe-LIIß STEI-schn"],
+      ["Ich habe mich verlaufen.", "I'm lost."],
+      ["Mein Auto hat eine Panne.", "My car has broken down."],
+      ["Ich habe eine Reiseversicherung.", "I have travel insurance.", "in-SCHU-renß"]
+    ]},
+    { id: "food", name: "Restaurant", items: [
+      ["Einen Tisch für zwei, bitte.", "A table for two, please."],
+      ["Wir haben auf den Namen Müller reserviert.", "We have a reservation under the name Müller.", "re-ser-WEI-schn"],
+      ["Könnten wir bitte die Speisekarte haben?", "Could we have the menu, please?"],
+      ["Was empfehlen Sie?", "What do you recommend?", "rek-o-MEND"],
+      ["Ich hätte gern das Hähnchen.", "I'd like the chicken, please."],
+      ["Ich bin Vegetarier.", "I'm vegetarian.", "wedsch-e-TÄ-ri-en"],
+      ["Enthält das Nüsse?", "Does this contain nuts?"],
+      ["Ohne Zwiebeln, bitte.", "No onions, please."],
+      ["Das Fleisch ist nicht ganz durch.", "The meat isn't cooked through.", "THRUU"],
+      ["Das habe ich nicht bestellt.", "That's not what I ordered."],
+      ["Noch ein Glas Wein, bitte.", "Another glass of wine, please."],
+      ["Es war köstlich.", "It was delicious.", "di-LI-schöß"],
+      ["Die Rechnung, bitte.", "Could we have the bill, please?", "", "In den USA sagt man „the check“."],
+      ["Ist die Bedienung inbegriffen?", "Is service included?"],
+      ["Wir zahlen getrennt.", "We'd like to pay separately."],
+      ["Stimmt so.", "Keep the change."]
+    ]},
+    { id: "move", name: "Unterwegs", items: [
+      ["Wie komme ich zum Bahnhof?", "How do I get to the train station?"],
+      ["Ist es weit von hier?", "Is it far from here?"],
+      ["Gehen Sie geradeaus und dann links.", "Go straight ahead, then turn left."],
+      ["Es ist auf der rechten Seite, gegenüber der Bank.", "It's on the right, opposite the bank."],
+      ["Wo ist die nächste Bushaltestelle?", "Where is the nearest bus stop?"],
+      ["Eine Fahrkarte nach Brighton, bitte.", "A ticket to Brighton, please."],
+      ["Einfach oder hin und zurück?", "Single or return?", "", "In den USA: „one-way or round trip?“"],
+      ["Von welchem Gleis fährt der Zug?", "Which platform does the train leave from?"],
+      ["Wann fährt der nächste Bus?", "When is the next bus?"],
+      ["Fährt dieser Bus zum Strand?", "Does this bus go to the beach?"],
+      ["Zum Flughafen, bitte.", "To the airport, please."],
+      ["Wie viel kostet die Fahrt ungefähr?", "How much is the fare, roughly?"],
+      ["Ich möchte ein Auto mieten.", "I'd like to rent a car."],
+      ["Wo kann ich tanken?", "Where can I get petrol?", "PET-rl", "In den USA sagt man „gas“."],
+      ["Mein Zug hat Verspätung.", "My train is delayed."],
+      ["Ich habe meinen Anschluss verpasst.", "I've missed my connection."]
+    ]},
+    { id: "hotel", name: "Hotel", items: [
+      ["Ich habe ein Zimmer reserviert.", "I have a reservation.", "re-ser-WEI-schn"],
+      ["Ein Doppelzimmer für drei Nächte.", "A double room for three nights."],
+      ["Ist das Frühstück inklusive?", "Is breakfast included?", "BREK-fest"],
+      ["Wann gibt es Frühstück?", "What time is breakfast served?"],
+      ["Wie lautet das WLAN-Passwort?", "What's the Wi-Fi password?", "WAI-fai"],
+      ["Die Klimaanlage funktioniert nicht.", "The air conditioning isn't working.", "ÄR kon-DI-schn-ing"],
+      ["Es gibt kein warmes Wasser.", "There's no hot water."],
+      ["Die Zimmerkarte funktioniert nicht.", "My key card doesn't work."],
+      ["Haben Sie ein ruhigeres Zimmer?", "Do you have a quieter room?"],
+      ["Ich hätte gern ein Zimmer mit Meerblick.", "I'd like a room with a sea view."],
+      ["Könnte ich noch Handtücher bekommen?", "Could I have some more towels, please?", "TAU-elz"],
+      ["Wann ist der Check-out?", "What time is check-out?"],
+      ["Können Sie unser Gepäck aufbewahren?", "Could you store our luggage?", "LA-gidsch"],
+      ["Rufen Sie mir bitte ein Taxi.", "Could you call me a taxi, please?"],
+      ["Was können Sie uns in der Umgebung empfehlen?", "What would you recommend around here?"]
+    ]},
+    { id: "shop", name: "Einkaufen", items: [
+      ["Wie viel kostet das?", "How much is this?"],
+      ["Das ist zu teuer.", "That's too expensive."],
+      ["Haben Sie etwas Günstigeres?", "Do you have anything cheaper?", "TSCHII-per"],
+      ["Ich schaue mich nur um, danke.", "I'm just looking, thanks."],
+      ["Kann ich das anprobieren?", "Can I try this on?"],
+      ["Haben Sie das eine Größe größer?", "Do you have this in a larger size?"],
+      ["Ich nehme es.", "I'll take it."],
+      ["Kann ich mit Karte zahlen?", "Can I pay by card?"],
+      ["Nehmen Sie Bargeld?", "Do you take cash?"],
+      ["Könnte ich eine Tüte haben?", "Could I have a bag, please?"],
+      ["Kann ich eine Quittung haben?", "Can I have a receipt, please?", "ri-ßIIT", "Das p bleibt stumm."],
+      ["Wo ist der nächste Geldautomat?", "Where is the nearest cash machine?", "KÄSCH me-SCHIIN", "In den USA: „ATM“."],
+      ["Wann machen Sie auf, wann zu?", "What time do you open and close?"],
+      ["Kann ich das umtauschen?", "Can I exchange this?"],
+      ["Ich suche ein Geschenk für meine Frau.", "I'm looking for a gift for my wife."]
+    ]},
+    { id: "talk", name: "Gespräch", items: [
+      ["Wie geht's?", "How are you?"],
+      ["Gut, danke. Und Ihnen?", "Fine, thank you. And you?"],
+      ["Ich komme aus Deutschland.", "I'm from Germany."],
+      ["Wir sind zum ersten Mal hier.", "It's our first time here."],
+      ["Wir machen zwei Wochen Urlaub.", "We're here on holiday for two weeks.", "", "In den USA: „vacation“."],
+      ["Mein Englisch ist nicht perfekt.", "My English isn't perfect."],
+      ["Könnten Sie bitte langsamer sprechen?", "Could you speak a bit more slowly, please?"],
+      ["Könnten Sie das bitte wiederholen?", "Could you repeat that, please?"],
+      ["Das habe ich nicht verstanden.", "I didn't catch that."],
+      ["Was bedeutet das?", "What does that mean?"],
+      ["Wie sagt man „Sonnenschirm“ auf Englisch?", "How do you say “Sonnenschirm” in English?"],
+      ["Sprechen Sie Deutsch?", "Do you speak German?"],
+      ["Könnten Sie ein Foto von uns machen?", "Could you take a photo of us, please?"],
+      ["Es ist wunderschön hier!", "It's beautiful here!"],
+      ["Entschuldigung, darf ich mal vorbei?", "Excuse me, may I get past?"],
+      ["Vielen Dank für Ihre Hilfe.", "Thank you so much for your help."],
+      ["Schönen Tag noch!", "Have a nice day!"]
+    ]},
+    { id: "num", name: "Zeit & Zahlen", items: [
+      ["Wie spät ist es?", "What time is it?"],
+      ["Es ist halb drei.", "It's half past two."],
+      ["Es ist Viertel nach vier.", "It's a quarter past four."],
+      ["Es ist Viertel vor fünf.", "It's a quarter to five."],
+      ["Wann haben Sie geöffnet?", "What are your opening hours?"],
+      ["Wie lange dauert das?", "How long does it take?"],
+      ["Wir bleiben bis Samstag.", "We're staying until Saturday."],
+      ["Dreizehn oder dreißig?", "Thirteen or thirty?", "thör-TIIN / THÖR-ti", "Bei -teen liegt die Betonung hinten, bei -ty vorn. Am Telefon und am Schalter der häufigste Stolperstein."],
+      ["Es kostet zwölf fünfzig.", "It's twelve fifty.", "", "Preise sagt man als Zahlenpaar: 12,50 = twelve fifty."],
+      ["Das macht fünfzehn Euro.", "That's fifteen euros."],
+      ["Unser Flug geht um sechs Uhr fünfundvierzig.", "Our flight is at six forty-five."],
+      ["Wir sind zu viert.", "There are four of us."],
+      ["Der Zug fährt in zehn Minuten.", "The train leaves in ten minutes."],
+      ["Heute Abend, morgen, übermorgen.", "Tonight, tomorrow, the day after tomorrow."]
+    ]},
+    { id: "out", name: "Strand & Ausflüge", items: [
+      ["Wo kann ich einen Sonnenschirm mieten?", "Where can I rent a parasol?", "PÄ-re-ßol"],
+      ["Ist es hier sicher zum Schwimmen?", "Is it safe to swim here?"],
+      ["Gibt es starke Strömungen?", "Are there strong currents?", "KÖ-renz"],
+      ["Wo sind die Toiletten?", "Where are the toilets?", "", "In den USA fragt man nach dem „restroom“ oder „bathroom“."],
+      ["Was kostet der Eintritt?", "How much is the entrance fee?"],
+      ["Gibt es eine Ermäßigung?", "Is there a discount?"],
+      ["Gibt es eine Führung auf Deutsch?", "Is there a guided tour in German?"],
+      ["Wann beginnt die nächste Führung?", "When does the next tour start?"],
+      ["Ich möchte eine Bootstour buchen.", "I'd like to book a boat tour."],
+      ["Wo kann ich Fahrräder leihen?", "Where can I rent bicycles?"],
+      ["Ist der Wanderweg schwierig?", "Is the trail difficult?", "DI-fi-költ"],
+      ["Darf man hier parken?", "Can I park here?"],
+      ["Wie wird morgen das Wetter?", "What's the weather going to be like tomorrow?"],
+      ["Ich habe Sonnenbrand.", "I've got sunburn."]
+    ]}
+  ];
+
+  var ALL = [];
+  DATA.forEach(function (c) {
+    c.items.forEach(function (it, i) {
+      ALL.push({ id: c.id + i, cat: c.id, de: it[0], en: it[1], pr: it[2] || "", note: it[3] || "" });
+    });
+  });
+  var BY = {};
+  ALL.forEach(function (x) { BY[x.id] = x; });
+  var CATNAME = {};
+  DATA.forEach(function (c) { CATNAME[c.id] = c.name; });
+
+  /* ---------- Zustand ---------- */
+  var KEY = "urlaubs-englisch-v1";
+  var S = { prog: {}, fav: {}, tab: "phrases", cat: "all", dir: "de", pool: "all" };
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) { var saved = JSON.parse(raw); for (var k in saved) { S[k] = saved[k]; } }
+  } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+  var R = { q: "", learn: { id: null, shown: false, count: 0, retry: [] }, quiz: null, confirmReset: false };
+
+  /* ---------- Helfer ---------- */
+  var view = document.getElementById("view");
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function box(x) { return S.prog[x.id] || 0; }
+  function shuffle(a) {
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  var ICON = {
+    speak: '<svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>',
+    star: '<svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z"/></svg>',
+    show: '<svg viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></svg>'
+  };
+
+  var canSpeak = "speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined";
+  if (!canSpeak) document.documentElement.classList.add("nospeech");
+  var FEMALE = /samantha|serena|karen|moira|tessa|fiona|ava\b|allison|susan|victoria|zira|aria|jenny|sonia|libby|hazel|emma|amy|joanna|female|catherine|kate|stephanie|nicky|martha|natasha|clara|michelle|ana\b/i;
+  var MALE = /\b(daniel|alex|fred|david|mark|george|guy|ryan|thomas|oliver|rishi|aaron|eddy|reed|arthur|gordon|ralph|albert|bruce|evan|james|liam|roger|brian|christopher|eric|steffan)\b/i;
+  function voiceScore(v) {
+    if (!/^en/i.test(v.lang)) return -1e9;
+    var s = 0, f = FEMALE.test(v.name);
+    if (/en[-_](GB|US)/i.test(v.lang)) s += 5; else s += 3;
+    if (/natural|neural|online/i.test(v.name)) s += 40;
+    if (/premium|enhanced/i.test(v.name)) s += 30;
+    if (f) s += 25; else if (MALE.test(v.name)) s -= 50;
+    if (!v.localService) s += 8;
+    return s;
+  }
+  function voiceList() {
+    if (!canSpeak) return [];
+    var vs = window.speechSynthesis.getVoices().filter(function (v) { return /^en/i.test(v.lang); });
+    return vs.sort(function (a, b) { return voiceScore(b) - voiceScore(a); });
+  }
+  function chosenVoice() {
+    var vs = voiceList();
+    if (S.voice) { for (var i = 0; i < vs.length; i++) if (vs[i].name === S.voice) return vs[i]; }
+    return vs[0] || null;
+  }
+  function speak(text) {
+    if (!canSpeak) return;
+    try {
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text), v = chosenVoice();
+      if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = "en-GB"; }
+      u.rate = 0.88; u.pitch = 1;
+      window.speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+  function fillVbar() {
+    var el = document.getElementById("vbar");
+    if (!el || !canSpeak) return;
+    var vs = voiceList(), cur = chosenVoice();
+    if (!vs.length) { el.innerHTML = '<p class="hint">Dein Gerät meldet keine englische Stimme. Das Vorlesen geht dann nicht.</p>'; return; }
+    el.innerHTML = '<label class="sel"><span>Stimme zum Vorlesen</span><select id="voiceSel"><option value="">Automatisch' + (cur ? ' (' + esc(cur.name) + ')' : '') + '</option>' +
+      vs.map(function (v) { return '<option value="' + esc(v.name) + '"' + (S.voice === v.name ? ' selected' : '') + '>' + esc(v.name) + ' · ' + esc(v.lang) + '</option>'; }).join("") +
+      '</select></label><button class="btn" data-act="vtest">Testen</button>';
+  }
+  if (canSpeak) { try { window.speechSynthesis.addEventListener("voiceschanged", fillVbar); } catch (e) {} }
+
+  function poolItems() {
+    var p = S.pool;
+    if (p === "all") return ALL;
+    if (p === "fav") return ALL.filter(function (x) { return S.fav[x.id]; });
+    if (p === "weak") return ALL.filter(function (x) { return x.id in S.prog && S.prog[x.id] < 3; });
+    return ALL.filter(function (x) { return x.cat === p; });
+  }
+  function mastered(list) { return list.filter(function (x) { return box(x) >= 3; }).length; }
+  function updateStat() {
+    document.getElementById("stat").textContent = ALL.length + " Phrasen · " + mastered(ALL) + " sitzen";
+  }
+
+  /* ---------- Phrasen ---------- */
+  function itemHtml(x) {
+    var fav = !!S.fav[x.id];
+    return '<article class="item"><div class="txt">' +
+      '<p class="en" lang="en">' + esc(x.en) + '</p>' +
+      '<p class="de" lang="de">' + esc(x.de) + '</p>' +
+      (x.pr ? '<p class="pr">Aussprache: ' + esc(x.pr) + '</p>' : '') +
+      (x.note ? '<p class="note">' + esc(x.note) + '</p>' : '') +
+      '</div><div class="acts">' +
+      '<button class="ib" data-act="speak" data-id="' + x.id + '" aria-label="Englisch anhören">' + ICON.speak + '</button>' +
+      '<button class="ib" data-act="show" data-id="' + x.id + '" aria-label="Groß anzeigen">' + ICON.show + '</button>' +
+      '<button class="ib' + (fav ? ' on' : '') + '" data-act="fav" data-id="' + x.id + '" aria-pressed="' + fav + '" aria-label="Merken">' + ICON.star + '</button>' +
+      '</div></article>';
+  }
+
+  function renderPhrases() {
+    var favCount = ALL.filter(function (x) { return S.fav[x.id]; }).length;
+    var chips = [["all", "Alle"], ["fav", "★ Gemerkt (" + favCount + ")"]].concat(
+      DATA.map(function (c) { return [c.id, c.name]; }));
+    view.innerHTML =
+      '<div id="vbar" class="vbar"></div><div class="search"><input id="q" type="search" autocomplete="off" aria-label="Phrasen suchen" placeholder="Suchen, z. B. Rechnung oder bill" value="' + esc(R.q) + '"></div>' +
+      '<div class="chips">' + chips.map(function (c) {
+        return '<button class="chip' + (c[0] === "sos" ? ' sos' : '') + '" data-act="cat" data-cat="' + c[0] + '" aria-pressed="' + (S.cat === c[0]) + '">' + esc(c[1]) + '</button>';
+      }).join("") + '</div><div id="list"></div>';
+    renderList();
+  }
+
+  function renderList() {
+    var q = R.q.trim().toLowerCase();
+    var list = document.getElementById("list");
+    var items, html = "";
+    if (q) {
+      items = ALL.filter(function (x) { return (x.en + " " + x.de + " " + x.pr).toLowerCase().indexOf(q) !== -1; });
+      html += '<p class="hint">' + items.length + (items.length === 1 ? " Treffer" : " Treffer") + ' in allen Themen</p>';
+      html += '<div class="list">' + items.map(itemHtml).join("") + '</div>';
+    } else if (S.cat === "fav") {
+      items = ALL.filter(function (x) { return S.fav[x.id]; });
+      html = items.length
+        ? '<div class="list">' + items.map(itemHtml).join("") + '</div>'
+        : '<p class="hint">Noch nichts gemerkt. Tippe bei einer Phrase auf den Stern, dann liegt sie hier griffbereit.</p>';
+    } else if (S.cat === "all") {
+      DATA.forEach(function (c) {
+        html += '<h2 class="group-title">' + esc(c.name) + '</h2><div class="list">' +
+          ALL.filter(function (x) { return x.cat === c.id; }).map(itemHtml).join("") + '</div>';
+      });
+    } else {
+      items = ALL.filter(function (x) { return x.cat === S.cat; });
+      html = '<div class="list">' + items.map(itemHtml).join("") + '</div>';
+    }
+    if (q && !items.length) html = '<p class="hint">Nichts gefunden. Probiere ein kürzeres Wort, deutsch oder englisch.</p>';
+    list.innerHTML = html;
+  }
+
+  /* ---------- Gemeinsame Auswahl für Lernen und Quiz ---------- */
+  function toolbar() {
+    var fav = ALL.filter(function (x) { return S.fav[x.id]; }).length;
+    var weak = ALL.filter(function (x) { return x.id in S.prog && S.prog[x.id] < 3; }).length;
+    var opts = [["all", "Alle Phrasen (" + ALL.length + ")"], ["fav", "Gemerkt (" + fav + ")"], ["weak", "Noch nicht sicher (" + weak + ")"]]
+      .concat(DATA.map(function (c) { return [c.id, c.name]; }));
+    return '<div class="tool"><label class="sel"><span>Was üben?</span><select id="poolSel">' +
+      opts.map(function (o) { return '<option value="' + o[0] + '"' + (S.pool === o[0] ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join("") +
+      '</select></label><div class="dir" role="group" aria-label="Richtung">' +
+      '<button data-act="dir" data-dir="de" aria-pressed="' + (S.dir === "de") + '">Deutsch → Englisch</button>' +
+      '<button data-act="dir" data-dir="en" aria-pressed="' + (S.dir === "en") + '">Englisch → Deutsch</button></div></div>';
+  }
+  function emptyPool() {
+    return '<div class="card center"><p class="prompt">Hier ist noch nichts drin.</p><p class="de">Merke dir Phrasen mit dem Stern, oder wähle oben ein anderes Thema. „Noch nicht sicher“ füllt sich, sobald du geübt hast.</p></div>';
+  }
+
+  /* ---------- Lernen ---------- */
+  function pickNext(items) {
+    var L = R.learn;
+    L.count++;
+    var idx = -1;
+    for (var i = 0; i < L.retry.length; i++) {
+      if (L.retry[i].due <= L.count && items.some(function (x) { return x.id === L.retry[i].id; })) { idx = i; break; }
+    }
+    if (idx >= 0) return L.retry.splice(idx, 1)[0].id;
+    var min = Math.min.apply(null, items.map(box));
+    var c = items.filter(function (x) { return box(x) === min; });
+    if (Math.random() < 0.25) {
+      var c2 = items.filter(function (x) { return box(x) === min + 1; });
+      if (c2.length) c = c2;
+    }
+    if (c.length > 1) c = c.filter(function (x) { return x.id !== L.id; });
+    return c[Math.floor(Math.random() * c.length)].id;
+  }
+
+  function renderLearn() {
+    var items = poolItems();
+    var L = R.learn;
+    var html = toolbar();
+    if (!items.length) { view.innerHTML = html + emptyPool(); return; }
+    if (!L.id || !items.some(function (x) { return x.id === L.id; })) { L.id = pickNext(items); L.shown = false; }
+    var x = BY[L.id];
+    var m = mastered(items), pct = Math.round(m / items.length * 100);
+    var de = S.dir === "de";
+    html += '<div class="meter"><span>' + m + ' von ' + items.length + ' sitzen</span><div class="bar"><i style="width:' + pct + '%"></i></div></div>';
+    html += '<section class="card"><p class="label">' + (de ? "Wie sagt man das auf Englisch?" : "Was heißt das?") + '</p>' +
+      '<div class="row"><p class="prompt" lang="' + (de ? "de" : "en") + '">' + esc(de ? x.de : x.en) + '</p>' +
+      (de ? '' : '<button class="ib" data-act="speak" data-id="' + x.id + '" aria-label="Englisch anhören">' + ICON.speak + '</button>') + '</div>';
+    if (!L.shown) {
+      html += '<button class="btn primary" data-act="reveal">Antwort zeigen</button>';
+    } else {
+      html += '<div class="answer"><div class="row"><p class="big" lang="' + (de ? "en" : "de") + '">' + esc(de ? x.en : x.de) + '</p>' +
+        (de ? '<button class="ib" data-act="speak" data-id="' + x.id + '" aria-label="Englisch anhören">' + ICON.speak + '</button>' : '') + '</div>' +
+        (x.pr ? '<p class="pr">Aussprache: ' + esc(x.pr) + '</p>' : '') +
+        (x.note ? '<p class="note">' + esc(x.note) + '</p>' : '') + '</div>' +
+        '<div class="two"><button class="btn bad" data-act="again">Nochmal</button><button class="btn good" data-act="knew">Sitzt</button></div>';
+    }
+    html += '</section>';
+    html += R.confirmReset
+      ? '<div class="two" style="margin-top:16px"><button class="btn bad" data-act="reset-yes">Fortschritt löschen</button><button class="btn" data-act="reset-no">Abbrechen</button></div>'
+      : '<p style="text-align:center;margin-top:12px"><button class="btn link" data-act="reset">Fortschritt zurücksetzen</button></p>';
+    view.innerHTML = html;
+  }
+
+  /* ---------- Quiz ---------- */
+  function startQuiz() {
+    var items = poolItems();
+    if (!items.length) return;
+    var qs = shuffle(items.slice()).slice(0, 10).map(function (x) { return x.id; });
+    R.quiz = { qs: qs, i: 0, score: 0, picked: null, wrong: [], opts: [], done: false };
+    makeOpts();
+  }
+  function makeOpts() {
+    var Q = R.quiz, x = BY[Q.qs[Q.i]];
+    var others = shuffle(ALL.filter(function (y) { return y.cat === x.cat && y.id !== x.id; })).slice(0, 3);
+    Q.opts = shuffle([x].concat(others)).map(function (o) { return o.id; });
+    Q.picked = null;
+  }
+
+  function renderQuiz() {
+    var items = poolItems(), Q = R.quiz, html = toolbar();
+    if (!items.length) { view.innerHTML = html + emptyPool(); return; }
+    var de = S.dir === "de";
+    if (!Q) {
+      html += '<section class="card center"><p class="prompt">Zehn Fragen</p><p class="de">Du siehst eine Phrase und wählst die richtige Übersetzung aus vier Antworten.</p><button class="btn primary" data-act="qstart">Los geht\'s</button></section>';
+    } else if (Q.done) {
+      html += '<section class="card center"><p class="label">Ergebnis</p><p class="score">' + Q.score + ' / ' + Q.qs.length + '</p>' +
+        (Q.wrong.length ? '<div class="miss"><p class="label">Das üben wir noch</p>' + Q.wrong.map(function (id) {
+          var w = BY[id]; return '<div><b>' + esc(w.en) + '</b><br><span class="de">' + esc(w.de) + '</span></div>';
+        }).join("") + '</div>' : '<p class="de">Alles richtig. Stark.</p>') +
+        '<div class="two" style="width:100%"><button class="btn primary" data-act="qstart">Noch eine Runde</button><button class="btn" data-act="tab" data-tab="learn">Zu den Karten</button></div></section>';
+    } else {
+      var x = BY[Q.qs[Q.i]];
+      var pct = Math.round(Q.i / Q.qs.length * 100);
+      html += '<div class="meter"><span>Frage ' + (Q.i + 1) + ' von ' + Q.qs.length + ' · ' + Q.score + ' richtig</span><div class="bar"><i style="width:' + pct + '%"></i></div></div>';
+      html += '<section class="card"><p class="label">' + (de ? "Wie sagt man das auf Englisch?" : "Was heißt das?") + '</p>' +
+        '<p class="prompt" lang="' + (de ? "de" : "en") + '">' + esc(de ? x.de : x.en) + '</p><div class="opts">' +
+        Q.opts.map(function (id) {
+          var o = BY[id], cls = "opt";
+          if (Q.picked !== null) {
+            if (id === x.id) cls += " right"; else if (id === Q.picked) cls += " wrong";
+          }
+          return '<button class="' + cls + '" data-act="pick" data-id="' + id + '" lang="' + (de ? "en" : "de") + '">' + esc(de ? o.en : o.de) + '</button>';
+        }).join("") + '</div>';
+      if (Q.picked !== null) {
+        var ok = Q.picked === x.id;
+        html += '<p class="fb ' + (ok ? 'ok' : 'no') + '">' + (ok ? 'Richtig.' : 'Nicht ganz. Richtig ist die grün markierte Antwort.') + '</p>' +
+          (x.pr ? '<p class="pr">Aussprache: ' + esc(x.pr) + '</p>' : '') +
+          '<div class="row"><button class="ib" data-act="speak" data-id="' + x.id + '" aria-label="Englisch anhören">' + ICON.speak + '</button>' +
+          '<button class="btn primary" style="flex:1" data-act="qnext">' + (Q.i + 1 === Q.qs.length ? 'Ergebnis' : 'Weiter') + '</button></div>';
+      }
+      html += '</section>';
+    }
+    view.innerHTML = html;
+  }
+
+  /* ---------- Fibel: einzelne Wörter ---------- */
+  var FIBEL = [
+    { name: "Höflichkeit", w: [
+      ["ja", "yes"], ["nein", "no"], ["bitte", "please"], ["danke", "thank you"], ["gern geschehen", "you're welcome"],
+      ["Entschuldigung", "excuse me"], ["Es tut mir leid", "sorry", "ßO-ri"], ["Hallo", "hello"], ["Guten Morgen", "good morning"],
+      ["Guten Abend", "good evening"], ["Gute Nacht", "good night"], ["Auf Wiedersehen", "goodbye"], ["Bis später", "see you later"]
+    ]},
+    { name: "Fragewörter", w: [
+      ["was", "what"], ["wo", "where"], ["wann", "when"], ["wer", "who"], ["warum", "why"], ["wie", "how"],
+      ["wie viel", "how much"], ["wie viele", "how many"], ["welcher", "which"], ["wie lange", "how long"]
+    ]},
+    { name: "Zahlen", w: [
+      ["eins", "one"], ["zwei", "two"], ["drei", "three", "thrii"], ["vier", "four"], ["fünf", "five"], ["sechs", "six"], ["sieben", "seven"],
+      ["acht", "eight"], ["neun", "nine"], ["zehn", "ten"], ["zwölf", "twelve"], ["dreizehn", "thirteen", "thör-TIIN"],
+      ["zwanzig", "twenty"], ["dreißig", "thirty", "THÖR-ti"], ["fünfzig", "fifty"], ["hundert", "a hundred"], ["tausend", "a thousand"]
+    ]},
+    { name: "Wochentage", w: [
+      ["Montag", "Monday"], ["Dienstag", "Tuesday", "TJUUS-dei"], ["Mittwoch", "Wednesday", "WENS-dei"], ["Donnerstag", "Thursday", "THÖRS-dei"],
+      ["Freitag", "Friday"], ["Samstag", "Saturday"], ["Sonntag", "Sunday"], ["heute", "today"], ["morgen", "tomorrow"], ["gestern", "yesterday"]
+    ]},
+    { name: "Essen & Trinken", w: [
+      ["Wasser", "water"], ["Brot", "bread", "bred"], ["Kaffee", "coffee"], ["Tee", "tea"], ["Bier", "beer"], ["Wein", "wine"],
+      ["Milch", "milk"], ["Saft", "juice", "dschuuß"], ["Fleisch", "meat"], ["Fisch", "fish"], ["Hähnchen", "chicken"], ["Gemüse", "vegetables", "WEDSCH-te-bls"],
+      ["Obst", "fruit", "fruut"], ["Käse", "cheese"], ["Ei", "egg"], ["Salz", "salt"], ["Pfeffer", "pepper"], ["Zucker", "sugar", "SCHU-ger"],
+      ["Eis", "ice cream"], ["Vorspeise", "starter"], ["Hauptgericht", "main course"], ["Nachtisch", "dessert", "di-SÖRT"],
+      ["Messer", "knife", "naif (k stumm)"], ["Gabel", "fork"], ["Löffel", "spoon"], ["Glas", "glass"]
+    ]},
+    { name: "Körper & Gesundheit", w: [
+      ["Kopf", "head"], ["Bauch", "stomach", "STA-mek"], ["Rücken", "back"], ["Hals", "throat", "throut"], ["Fieber", "fever", "FII-wer"],
+      ["Kopfschmerzen", "headache", "HED-eik"], ["Bauchschmerzen", "stomachache", "STA-mek-eik"], ["Schmerz", "pain"], ["Medikament", "medicine", "MED-ßn"],
+      ["Sonnenbrand", "sunburn"], ["Sonnencreme", "sun cream"], ["Durchfall", "diarrhoea", "dai-a-RII-a"], ["Erkältung", "a cold"], ["Zahnarzt", "dentist"]
+    ]},
+    { name: "Orte", w: [
+      ["Flughafen", "airport"], ["Bahnhof", "train station"], ["Hotel", "hotel"], ["Strand", "beach"], ["Bank", "bank"], ["Apotheke", "pharmacy", "FAA-me-ßi"],
+      ["Supermarkt", "supermarket"], ["Kirche", "church", "tschörtsch"], ["Museum", "museum", "mju-SII-em"], ["Hafen", "harbour", "HAA-ber"],
+      ["Stadtzentrum", "town centre"], ["Toilette", "toilet"], ["Krankenhaus", "hospital"], ["Polizei", "police", "pe-LIIß"], ["Geldautomat", "cash machine"]
+    ]},
+    { name: "Verkehr & Richtung", w: [
+      ["Bus", "bus"], ["Zug", "train"], ["Taxi", "taxi"], ["Fähre", "ferry"], ["Fahrkarte", "ticket"], ["Gleis", "platform"], ["Auto", "car"],
+      ["Fahrrad", "bicycle", "BAI-ßi-kl"], ["links", "left"], ["rechts", "right"], ["geradeaus", "straight ahead", "ahed"], ["nah", "near"],
+      ["weit", "far"], ["gegenüber", "opposite", "O-pe-sit"], ["neben", "next to"], ["an der Ampel", "at the traffic lights"], ["Kreuzung", "junction"]
+    ]},
+    { name: "Hotel", w: [
+      ["Zimmer", "room"], ["Schlüssel", "key", "kii"], ["Bett", "bed"], ["Handtuch", "towel", "TAU-el"], ["Dusche", "shower", "SCHAU-er"], ["Frühstück", "breakfast", "BREK-fest"],
+      ["Rechnung", "bill"], ["Gepäck", "luggage", "LA-gidsch"], ["Koffer", "suitcase", "ßUUT-keiß"], ["Aufzug", "lift"], ["Pool", "swimming pool"], ["Meerblick", "sea view"]
+    ]},
+    { name: "Wetter", w: [
+      ["Sonne", "sun"], ["Regen", "rain"], ["Wind", "wind"], ["Wolke", "cloud"], ["Gewitter", "thunderstorm", "THAN-der-storm"],
+      ["heiß", "hot"], ["kalt", "cold"], ["warm", "warm"], ["sonnig", "sunny"], ["regnerisch", "rainy"]
+    ]},
+    { name: "Eigenschaften", w: [
+      ["groß", "big"], ["klein", "small"], ["billig", "cheap", "tschiip"], ["teuer", "expensive", "ik-SPEN-ßiw"], ["gut", "good"], ["schlecht", "bad"],
+      ["offen", "open"], ["geschlossen", "closed"], ["frei", "free"], ["besetzt", "taken"], ["voll", "full"], ["leer", "empty"],
+      ["sauber", "clean"], ["schmutzig", "dirty"], ["ruhig", "quiet", "KWAI-et"], ["laut", "loud"], ["schön", "beautiful", "BJUU-ti-fl"]
+    ]},
+    { name: "Wichtige Verben", w: [
+      ["haben", "to have"], ["brauchen", "to need"], ["wollen / möchten", "to want"], ["gehen", "to go"], ["kaufen", "to buy"], ["bezahlen", "to pay"],
+      ["essen", "to eat"], ["trinken", "to drink"], ["buchen", "to book"], ["mieten", "to rent"], ["finden", "to find"], ["verstehen", "to understand"],
+      ["sprechen", "to speak"], ["fragen", "to ask"], ["warten", "to wait"], ["helfen", "to help"], ["kommen", "to come"], ["bleiben", "to stay"]
+    ]}
+  ];
+
+  function renderFibel() {
+    view.innerHTML = '<div id="vbar" class="vbar"></div><div class="search"><input id="fq" type="search" autocomplete="off" aria-label="Wörter suchen" placeholder="Wort suchen, deutsch oder englisch" value="' + esc(R.fq || "") + '"></div><div id="flist"></div>';
+    renderFlist();
+  }
+  function renderFlist() {
+    var q = (R.fq || "").trim().toLowerCase(), html = "", total = 0;
+    FIBEL.forEach(function (g) {
+      var ws = g.w.filter(function (w) { return !q || (w[0] + " " + w[1]).toLowerCase().indexOf(q) !== -1; });
+      if (!ws.length) return;
+      total += ws.length;
+      html += '<h2 class="group-title">' + esc(g.name) + '</h2><div class="words">' + ws.map(function (w) {
+        return '<div class="wd"><div class="txt"><b lang="en">' + esc(w[1]) + '</b><span class="de" lang="de">' + esc(w[0]) + '</span>' +
+          (w[2] ? '<span class="pr">' + esc(w[2]) + '</span>' : '') + '</div>' +
+          '<button class="ib" data-act="wspeak" data-t="' + esc(w[1]) + '" aria-label="Englisch anhören">' + ICON.speak + '</button></div>';
+      }).join("") + '</div>';
+    });
+    document.getElementById("flist").innerHTML = html || '<p class="hint">Nichts gefunden. Probiere ein kürzeres Wort.</p>';
+  }
+
+  /* ---------- Rendern ---------- */
+  function render() {
+    document.querySelectorAll("[data-tab]").forEach(function (b) {
+      if (b.closest(".tabs")) b.setAttribute("aria-pressed", String(b.dataset.tab === S.tab));
+    });
+    updateStat();
+    if (S.tab === "phrases") renderPhrases();
+    else if (S.tab === "learn") renderLearn();
+    else if (S.tab === "fibel") renderFibel();
+    else renderQuiz();
+    fillVbar();
+  }
+
+  function resetPractice() { R.learn.id = null; R.learn.shown = false; R.learn.retry = []; R.quiz = null; }
+
+  /* ---------- Ereignisse ---------- */
+  function openShow(x) {
+    document.getElementById("showEn").textContent = x.en;
+    document.getElementById("showDe").textContent = x.de;
+    document.getElementById("show").hidden = false;
+  }
+  function closeShow() { document.getElementById("show").hidden = true; }
+
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-act]");
+    if (!b) return;
+    var act = b.dataset.act, id = b.dataset.id, x = id ? BY[id] : null;
+    if (act === "close") { if (e.target === b || b.classList.contains("close")) closeShow(); return; }
+    switch (act) {
+      case "tab": S.tab = b.dataset.tab; save(); render(); window.scrollTo(0, 0); break;
+      case "cat": S.cat = b.dataset.cat; R.q = ""; save(); renderPhrases(); break;
+      case "speak": if (x) speak(x.en); break;
+      case "wspeak": speak(b.dataset.t); break;
+      case "vtest": speak("Good morning! Could we have a table for two, please?"); break;
+      case "show": if (x) openShow(x); break;
+      case "fav":
+        if (S.fav[id]) delete S.fav[id]; else S.fav[id] = 1;
+        save();
+        if (S.tab === "phrases") { renderList(); var fc = ALL.filter(function (y) { return S.fav[y.id]; }).length;
+          var chip = document.querySelector('[data-cat="fav"]'); if (chip) chip.textContent = "★ Gemerkt (" + fc + ")"; }
+        break;
+      case "dir": S.dir = b.dataset.dir; save(); R.quiz = null; render(); break;
+      case "reveal": R.learn.shown = true; renderLearn(); break;
+      case "knew":
+        S.prog[R.learn.id] = Math.min(4, (S.prog[R.learn.id] || 0) + 1); save();
+        R.learn.id = null; R.learn.shown = false; updateStat(); renderLearn(); break;
+      case "again":
+        S.prog[R.learn.id] = 0; save();
+        R.learn.retry.push({ id: R.learn.id, due: R.learn.count + 3 });
+        R.learn.id = null; R.learn.shown = false; updateStat(); renderLearn(); break;
+      case "reset": R.confirmReset = true; renderLearn(); break;
+      case "reset-no": R.confirmReset = false; renderLearn(); break;
+      case "reset-yes": S.prog = {}; save(); R.confirmReset = false; resetPractice(); render(); break;
+      case "qstart": startQuiz(); renderQuiz(); break;
+      case "pick":
+        var Q = R.quiz;
+        if (!Q || Q.picked !== null) break;
+        var cur = BY[Q.qs[Q.i]];
+        Q.picked = id;
+        if (id === cur.id) { Q.score++; S.prog[cur.id] = Math.min(4, (S.prog[cur.id] || 0) + 1); }
+        else { Q.wrong.push(cur.id); S.prog[cur.id] = 0; }
+        save(); updateStat(); renderQuiz(); break;
+      case "qnext":
+        var QQ = R.quiz;
+        if (QQ.i + 1 >= QQ.qs.length) QQ.done = true; else { QQ.i++; makeOpts(); }
+        renderQuiz(); window.scrollTo(0, 0); break;
+    }
+  });
+
+  document.addEventListener("input", function (e) {
+    if (e.target.id === "q") { R.q = e.target.value; renderList(); }
+    if (e.target.id === "fq") { R.fq = e.target.value; renderFlist(); }
+  });
+  document.addEventListener("change", function (e) {
+    if (e.target.id === "voiceSel") { S.voice = e.target.value; save(); fillVbar(); speak("Good morning! Could we have a table for two, please?"); return; }
+    if (e.target.id === "poolSel") { S.pool = e.target.value; save(); resetPractice(); render(); }
+  });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeShow(); });
+
+  render();
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
+  }
+})();
+</script>
+</body>
+</html>
